@@ -11,8 +11,8 @@ def alpha_beta_to_abc(alpha_beta: np.ndarray) -> np.ndarray:
 
     Parameters
     ----------
-    alpha_beta_matrix : np.ndarray
-        Matrix of values complex alpha-beta values
+    alpha_beta: np.ndarray
+        Array of complex alpha-beta values
 
     Returns
     -------
