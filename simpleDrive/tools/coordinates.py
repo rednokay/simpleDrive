@@ -3,6 +3,9 @@ from simpleDrive.tools.transforms import alpha_beta_to_abc
 
 
 class AlphaBetaCoordinates():
+    """
+    Stationary reference frame aka alpha-beta coordinates
+    """
     def __init__(self, *args):
         self.alpha_beta = None
 
