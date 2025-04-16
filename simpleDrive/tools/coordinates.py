@@ -6,6 +6,7 @@ class AlphaBetaCoordinates():
     """
     Stationary reference frame aka alpha-beta coordinates
     """
+
     def __init__(self, *args):
         self.alpha_beta = None
 
@@ -63,3 +64,12 @@ class AlphaBetaCoordinates():
             Matrix of a (first row), b (second row) and c (third row) values
         """
         return alpha_beta_to_abc(self.alpha_beta)
+
+
+class AbcCoordinates():
+    """
+    Three-phase abc coordinate system
+    """
+
+    def __init__(self, *args):
+        pass
