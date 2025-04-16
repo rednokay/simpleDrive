@@ -5,14 +5,14 @@ def abc_to_alpha_beta(abc_matrix):
     pass
 
 
-def alpha_beta_to_abc(alpha_beta_matrix: np.ndarray) -> np.ndarray:
+def alpha_beta_to_abc(alpha_beta: np.ndarray) -> np.ndarray:
     """
     Compute alpha-beta to abc transform.
 
     Parameters
     ----------
     alpha_beta_matrix : np.ndarray
-        Matrix of alpha (first row) and beta (second row) values
+        Matrix of values complex alpha-beta values
 
     Returns
     -------
@@ -22,11 +22,12 @@ def alpha_beta_to_abc(alpha_beta_matrix: np.ndarray) -> np.ndarray:
     T = np.array([[1, 0],
                   [-0.5, np.sqrt(3)/2],
                   [-0.5, -np.sqrt(3)/2]])
-    return T@alpha_beta_matrix
+    return T@np.vstack((np.real(alpha_beta), np.imag(alpha_beta)))
 
 
-def alpha_beta_to_dq(alpha_beta_matrix, theta):
+def alpha_beta_to_dq(alpha_beta, theta):
     pass
 
-def dq_to_alpha_beta(dq_matrix, theta):
+
+def dq_to_alpha_beta(dq, theta):
     pass
