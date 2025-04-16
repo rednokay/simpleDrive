@@ -40,6 +40,14 @@ class AlphaBetaCoordinates():
                 "Could not create alpha-beta-coordinates from given values")
 
     def __str__(self):
+        """
+        Returns the np.ndarray string
+
+        Returns
+        -------
+        str
+            String of alpha beta np.ndarray
+        """
         return str(self.alpha_beta)
 
     def to_abc(self):
