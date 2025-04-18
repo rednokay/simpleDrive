@@ -71,5 +71,23 @@ class AbcCoordinates():
     Three-phase abc coordinate system
     """
 
+    # TODO: Check for equal length of each array
     def __init__(self, *args):
-        pass
+        self.abc = None
+        if len(args) == 1 and isinstance(args[0], np.ndarray):
+            self.abc = args[0]
+        elif len(args) == 1 and isinstance(args[0], list):
+            self.abc = np.array(args[0])
+        elif len(args) == 3:
+            abc = []
+            for arg in args:
+                if isinstance(arg, np.ndarray):
+                    abc.append(arg)
+                elif isinstance(arg, list):
+                    abc.append(np.array(arg))
+                else:
+                    raise ValueError(
+                        "At least one input is neither list nor ndarray.")
+            self.abc = np.array(abc)
+        else:
+            raise ValueError("Could not create ABC-values from selection.")
