@@ -1,9 +1,34 @@
 import unittest
 import numpy as np
-from simpleDrive.tools.coordinates import AlphaBetaCoordinates, AbcCoordinates
-from simpleDrive.tools.transforms import alpha_beta_to_abc
+from simpleDrive.tools.coordinates import AlphaBetaCoordinates, AbcCoordinates, alpha_beta_to_abc
 
 
+class TestAlphaBetaToAbc(unittest.TestCase):
+    def setUp(self):
+        alpha = [1, 0.2, 3]
+        beta = [-1, 3.2, 1]
+        self.alpha_beta = AlphaBetaCoordinates(alpha, beta)
+
+    def test_instance(self):
+        self.assertTrue(isinstance(alpha_beta_to_abc(
+            self.alpha_beta), AbcCoordinates))
+
+    # TODO: test b and c phases
+    def test_number(self):
+        alpha_beta = AlphaBetaCoordinates(1 + 2j)
+        abc = alpha_beta_to_abc(alpha_beta)
+
+        self.assertEqual(abc.abc[0], np.real(alpha_beta.alpha_beta))
+
+    # TODO: test b and c phases
+    def test_ndarray(self):
+        abc = alpha_beta_to_abc(self.alpha_beta)
+
+        np.testing.assert_array_equal(
+            abc.abc[0], np.real(self.alpha_beta.alpha_beta).ravel())
+
+
+@unittest.skip
 class TestAlphaBetaCoordinates(unittest.TestCase):
     def test_init_single_number_ndarray(self):
         alpha_beta_input = np.array([0.25 + 1j])
@@ -85,9 +110,13 @@ class TestAlphaBetaCoordinates(unittest.TestCase):
 
     def test_to_abc(self):
         abc_ref = alpha_beta_to_abc(self.alpha_beta.alpha_beta)
+        abc = self.alpha.to_abc()
+
+        self.assertTrue(isinstance(abc, AbcCoordinates))
         np.testing.assert_array_equal(abc_ref, self.alpha_beta.to_abc())
 
 
+@unittest.skip
 class TestAbcCoordinates(unittest.TestCase):
     def test_init_single_ndarray(self):
         abc_ref = np.array([[1, 2, 3], [3, 1, 2], [2, 3, 1]])

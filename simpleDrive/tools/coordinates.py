@@ -1,5 +1,32 @@
 import numpy as np
-from simpleDrive.tools.transforms import alpha_beta_to_abc
+
+
+class AbcCoordinates:
+    pass
+
+
+class AlphaBetaCoordinates:
+    pass
+
+
+def alpha_beta_to_abc(alpha_beta: AlphaBetaCoordinates) -> AbcCoordinates:
+    """
+    Compute alpha-beta to abc transform.
+
+    Parameters
+    ----------
+    alpha_beta : AlphaBetaCoordinates
+        Alpha-beta values to transform
+
+    Returns
+    -------
+    AbcCoordinates
+        Transformed values in ABC-Coordinates
+    """
+    T = np.array([[1, 0],
+                  [-0.5, np.sqrt(3)/2],
+                  [-0.5, -np.sqrt(3)/2]])
+    return AbcCoordinates(T@np.vstack((np.real(alpha_beta.alpha_beta), np.imag(alpha_beta.alpha_beta))))
 
 
 class AlphaBetaCoordinates():
@@ -54,14 +81,14 @@ class AlphaBetaCoordinates():
         """
         return str(self.alpha_beta)
 
-    def to_abc(self):
+    def to_abc(self) -> AbcCoordinates:
         """
         Transforms to three-phase abc coordinates
 
         Returns
         -------
-        np.ndarray
-            Matrix of a (first row), b (second row) and c (third row) values
+        AbcCoordinates
+            Transformed values in AbcCoordinates
         """
         return alpha_beta_to_abc(self.alpha_beta)
 
