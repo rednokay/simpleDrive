@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from simpleDrive.tools.coordinates import AlphaBetaCoordinates, AbcCoordinates, alpha_beta_to_abc
+from simpleDrive.tools.coordinates import AlphaBetaCoordinates, AbcCoordinates, alpha_beta_to_abc, abc_to_alpha_beta
 
 
 class TestAlphaBetaToAbc(unittest.TestCase):
@@ -26,6 +26,22 @@ class TestAlphaBetaToAbc(unittest.TestCase):
 
         np.testing.assert_array_equal(
             abc.abc[0], np.real(self.alpha_beta.alpha_beta).ravel())
+
+
+class TestAbcToAlphaBeta(unittest.TestCase):
+    def setUp(self):
+        a = [1, 3, -1]
+        b = [-1, 5, 0]
+        c = [7, 3, 3]
+        self.abc = AbcCoordinates(a, b, c)
+
+    def test_instance(self):
+        self.assertTrue(isinstance(
+            abc_to_alpha_beta(self.abc), AlphaBetaCoordinates))
+    
+    def test_ndarray(self):
+        alpha_beta = abc_to_alpha_beta(self.abc)
+        np.testing.assert_array_equal(np.real(alpha_beta.alpha_beta).ravel(), self.abc.abc[0])
 
 
 class TestAlphaBetaCoordinates(unittest.TestCase):

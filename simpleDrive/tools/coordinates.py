@@ -29,6 +29,12 @@ def alpha_beta_to_abc(alpha_beta: AlphaBetaCoordinates) -> AbcCoordinates:
     return AbcCoordinates(T@np.vstack((np.real(alpha_beta.alpha_beta), np.imag(alpha_beta.alpha_beta))))
 
 
+def abc_to_alpha_beta(abc: AbcCoordinates) -> AlphaBetaCoordinates:
+    T = np.array([[2/3, -1/3, -1/3], [0, 1/np.sqrt(3), -1/np.sqrt(3)]])
+    print(f"{abc.abc=}")
+    return AlphaBetaCoordinates(T@abc.abc)
+
+
 class AlphaBetaCoordinates():
     """
     Stationary reference frame aka alpha-beta coordinates
@@ -118,3 +124,17 @@ class AbcCoordinates():
             self.abc = np.array(abc)
         else:
             raise ValueError("Could not create ABC-values from selection.")
+
+    def __str__(self):
+        """
+        Returns the np.ndarray string
+
+        Returns
+        -------
+        str
+            String of alpha beta np.ndarray
+        """
+        return str(self.abc)
+
+    def to_alpha_beta(self):
+        pass
