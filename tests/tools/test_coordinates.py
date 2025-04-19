@@ -28,7 +28,6 @@ class TestAlphaBetaToAbc(unittest.TestCase):
             abc.abc[0], np.real(self.alpha_beta.alpha_beta).ravel())
 
 
-@unittest.skip
 class TestAlphaBetaCoordinates(unittest.TestCase):
     def test_init_single_number_ndarray(self):
         alpha_beta_input = np.array([0.25 + 1j])
@@ -109,11 +108,11 @@ class TestAlphaBetaCoordinates(unittest.TestCase):
         self.alpha_beta = AlphaBetaCoordinates(self.alpha, self.beta)
 
     def test_to_abc(self):
-        abc_ref = alpha_beta_to_abc(self.alpha_beta.alpha_beta)
-        abc = self.alpha.to_abc()
+        abc_ref = alpha_beta_to_abc(self.alpha_beta)
+        abc = self.alpha_beta.to_abc()
 
         self.assertTrue(isinstance(abc, AbcCoordinates))
-        np.testing.assert_array_equal(abc_ref, self.alpha_beta.to_abc())
+        np.testing.assert_array_equal(abc_ref.abc, abc.abc)
 
 
 @unittest.skip

@@ -90,7 +90,7 @@ class AlphaBetaCoordinates():
         AbcCoordinates
             Transformed values in AbcCoordinates
         """
-        return alpha_beta_to_abc(self.alpha_beta)
+        return alpha_beta_to_abc(self)
 
 
 class AbcCoordinates():
