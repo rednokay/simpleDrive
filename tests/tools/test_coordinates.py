@@ -115,7 +115,6 @@ class TestAlphaBetaCoordinates(unittest.TestCase):
         np.testing.assert_array_equal(abc_ref.abc, abc.abc)
 
 
-@unittest.skip
 class TestAbcCoordinates(unittest.TestCase):
     def test_init_single_ndarray(self):
         abc_ref = np.array([[1, 2, 3], [3, 1, 2], [2, 3, 1]])
