@@ -65,6 +65,10 @@ class ComplexValuedCoordinates():
         """
         return self._values
 
+    @cmplx.setter
+    def cmplx(self, complex_values: np.ndarray):
+        pass
+
     @property
     def real(self) -> np.ndarray:
         """
@@ -76,6 +80,15 @@ class ComplexValuedCoordinates():
             Real values of the instance
         """
         return np.real(self._values)
+
+    @reak.setter
+    def real(self, new_real_values: np.ndarray):
+        if len(new_real_values) != len(self.imag):
+            raise ValueError(
+                "The real values to set must be of the same length as the existing imaginary values.")
+        if not isinstance(new_real_values, np.ndarray):
+            raise ValueError("Real values must be formatted as np.ndarray.")
+        self._values = new_real_values + 1j*self.imag
 
     @property
     def imag(self) -> np.ndarray:

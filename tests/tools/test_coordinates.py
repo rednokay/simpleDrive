@@ -88,6 +88,12 @@ class TestComplexValuedCoordinates(unittest.TestCase):
         phase = obj.phase
         self.assertTrue(isinstance(phase, np.ndarray))
         np.testing.assert_array_equal(phase, ref)
+    
+    def test_real_setter(self):
+        new_real = [-5, 0]
+        self.assertRaises(ValueError, self.obj.real, new_real)
+
+
 
 
 class TestAlphaBetaCoordinates(unittest.TestCase):
