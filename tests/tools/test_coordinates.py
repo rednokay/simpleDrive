@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from simpleDrive.tools.coordinates import AlphaBetaCoordinates, AbcCoordinates, alpha_beta_to_abc, abc_to_alpha_beta
+from simpleDrive.tools.coordinates import ComplexValuedCoordinates, AlphaBetaCoordinates, AbcCoordinates, alpha_beta_to_abc, abc_to_alpha_beta
 
 
 class TestAlphaBetaToAbc(unittest.TestCase):
@@ -46,6 +46,33 @@ class TestAbcToAlphaBeta(unittest.TestCase):
         print(f"{np.real(alpha_beta.alpha_beta)=}")
         np.testing.assert_array_equal(
             np.real(alpha_beta.alpha_beta), self.abc.abc[0])
+
+
+class TestComplexValuedCoordinates(unittest.TestCase):
+    def setUp(self):
+        self.real = [1, -2, 4]
+        self.imag = [1, -2, 4]
+        self.obj = ComplexValuedCoordinates(self.real, self.imag)
+
+    def test_init_valid(self):
+        self.assertTrue(isinstance(self.obj, ComplexValuedCoordinates))
+        self.assertTrue(isinstance(self.obj._values, np.ndarray))
+
+    def test_cmplx_property(self):
+        cmplx = self.obj.cmplx
+        self.assertTrue(isinstance(cmplx, np.ndarray))
+        self.assertEqual(np.real(cmplx).tolist(), self.real)
+        self.assertEqual(np.imag(cmplx).tolist(), self.imag)
+
+    def test_real_property(self):
+        real = self.obj.real
+        self.assertTrue(isinstance(real, np.ndarray))
+        self.assertEqual(real.tolist(), self.real)
+
+    def test_imag_property(self):
+        imag = self.obj.imag
+        self.assertTrue(isinstance(imag, np.ndarray))
+        self.assertEqual(imag.tolist(), self.imag)
 
 
 class TestAlphaBetaCoordinates(unittest.TestCase):

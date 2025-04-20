@@ -48,7 +48,49 @@ def abc_to_alpha_beta(abc: AbcCoordinates) -> AlphaBetaCoordinates:
     return AlphaBetaCoordinates(transformed[0], transformed[1])
 
 
-class AlphaBetaCoordinates():
+# TODO: Move args checkin here
+class ComplexValuedCoordinates():
+    def __init__(self, *args):
+        self._values = np.array(args[0]) + 1j*np.array(args[1])
+
+    @property
+    def cmplx(self) -> np.ndarray:
+        """
+        Property that returns the complex values of the class.
+
+        Returns
+        -------
+        np.ndarray
+            Complex values of the instance
+        """
+        return self._values
+
+    @property
+    def real(self) -> np.ndarray:
+        """
+        Property that returns the real vlaues of the class.
+
+        Returns
+        -------
+        np.ndarray
+            Real values of the instance
+        """
+        return np.real(self._values)
+
+    @property
+    def imag(self) -> np.ndarray:
+        """
+        Property that returns the imaginary vlaues of the class.
+
+        Returns
+        -------
+        np.ndarray
+            Imaginary values of the instance
+        """
+        return np.imag(self._values)
+
+
+class AlphaBetaCoordinates(ComplexValuedCoordinates):
     """
     Stationary reference frame aka alpha-beta coordinates
     """
