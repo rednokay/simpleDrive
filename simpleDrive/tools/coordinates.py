@@ -26,7 +26,7 @@ def alpha_beta_to_abc(alpha_beta: AlphaBetaCoordinates) -> AbcCoordinates:
     T = np.array([[1, 0],
                   [-0.5, np.sqrt(3)/2],
                   [-0.5, -np.sqrt(3)/2]])
-    return AbcCoordinates(T@np.vstack((np.real(alpha_beta.alpha_beta), np.imag(alpha_beta.alpha_beta))))
+    return AbcCoordinates(T@np.vstack((np.real(alpha_beta.cmplx), np.imag(alpha_beta.cmplx))))
 
 
 def abc_to_alpha_beta(abc: AbcCoordinates) -> AlphaBetaCoordinates:
@@ -209,17 +209,6 @@ class AlphaBetaCoordinates(ComplexValuedCoordinates):
 
     def __init__(self, *args):
         super().__init__(*args)
-
-    def __str__(self):
-        """
-        Returns the np.ndarray string
-
-        Returns
-        -------
-        str
-            String of alpha beta np.ndarray
-        """
-        return str(self.alpha_beta)
 
     def to_abc(self) -> AbcCoordinates:
         """
