@@ -178,6 +178,10 @@ class TestAlphaBetaCoordinates(unittest.TestCase):
         self.alpha = np.cos(self.phi)
         self.beta = np.sin(self.phi)
         self.obj = AlphaBetaCoordinates(self.alpha, self.beta)
+    
+    def test_instance(self):
+        self.assertTrue(isinstance(self.obj, AlphaBetaCoordinates))
+        self.assertTrue(isinstance(self.obj, ComplexValuedCoordinates))
 
     def test_to_abc(self):
         abc_ref = alpha_beta_to_abc(self.obj)
