@@ -48,7 +48,6 @@ def abc_to_alpha_beta(abc: AbcCoordinates) -> AlphaBetaCoordinates:
     return AlphaBetaCoordinates(transformed[0], transformed[1])
 
 
-# TODO: Move args checkin here
 class ComplexValuedCoordinates():
     def __init__(self, *args):
         self._values = None
