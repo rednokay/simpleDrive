@@ -32,16 +32,20 @@ class TestAbcToAlphaBeta(unittest.TestCase):
     def setUp(self):
         a = [1, 3, -1]
         b = [-1, 5, 0]
-        c = [7, 3, 3]
+        c = [0, -8, 1]
         self.abc = AbcCoordinates(a, b, c)
 
     def test_instance(self):
         self.assertTrue(isinstance(
             abc_to_alpha_beta(self.abc), AlphaBetaCoordinates))
-    
+
     def test_ndarray(self):
+        # self.abc = AbcCoordinates([1], [-1], [0])
         alpha_beta = abc_to_alpha_beta(self.abc)
-        np.testing.assert_array_equal(np.real(alpha_beta.alpha_beta).ravel(), self.abc.abc[0])
+
+        print(f"{np.real(alpha_beta.alpha_beta)=}")
+        np.testing.assert_array_equal(
+            np.real(alpha_beta.alpha_beta), self.abc.abc[0])
 
 
 class TestAlphaBetaCoordinates(unittest.TestCase):

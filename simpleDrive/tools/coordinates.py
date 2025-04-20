@@ -21,7 +21,7 @@ def alpha_beta_to_abc(alpha_beta: AlphaBetaCoordinates) -> AbcCoordinates:
     Returns
     -------
     AbcCoordinates
-        Transformed values in ABC-Coordinates
+        Transformed values in ABC-coordinates
     """
     T = np.array([[1, 0],
                   [-0.5, np.sqrt(3)/2],
@@ -30,9 +30,22 @@ def alpha_beta_to_abc(alpha_beta: AlphaBetaCoordinates) -> AbcCoordinates:
 
 
 def abc_to_alpha_beta(abc: AbcCoordinates) -> AlphaBetaCoordinates:
+    """
+    Compute abc to alpha-beta transform.
+
+    Parameters
+    ----------
+    abc : AbcCoordinates
+        ABC values to transform
+
+    Returns
+    -------
+    AlphaBetaCoordinates
+        Transformed values in alpha-beta-coordinates
+    """
     T = np.array([[2/3, -1/3, -1/3], [0, 1/np.sqrt(3), -1/np.sqrt(3)]])
-    print(f"{abc.abc=}")
-    return AlphaBetaCoordinates(T@abc.abc)
+    transformed = T@abc.abc
+    return AlphaBetaCoordinates(transformed[0], transformed[1])
 
 
 class AlphaBetaCoordinates():
