@@ -112,6 +112,8 @@ class AlphaBetaCoordinates():
         return alpha_beta_to_abc(self)
 
 
+# TODO: Handling of non-symmetric inputs!
+# TODO: Float or int inputs
 class AbcCoordinates():
     """
     Three-phase abc coordinate system
