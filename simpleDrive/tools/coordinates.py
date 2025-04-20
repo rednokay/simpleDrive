@@ -91,10 +91,26 @@ class ComplexValuedCoordinates():
 
     @property
     def abs(self) -> np.ndarray:
+        """
+        Property that returns the absolute vlaues of the class' complex values.
+
+        Returns
+        -------
+        np.ndarray
+            Absolute values of the instance
+        """
         return np.abs(self._values)
 
     @property
     def phase(self):
+        """
+        Property that returns the phase of the class' complex values.
+
+        Returns
+        -------
+        np.ndarray
+            Phase of the instance in rad
+        """
         return np.atan2(np.imag(self._values), np.real(self._values))
 
 

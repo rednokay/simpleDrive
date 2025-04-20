@@ -51,7 +51,7 @@ class TestAbcToAlphaBeta(unittest.TestCase):
 class TestComplexValuedCoordinates(unittest.TestCase):
     def setUp(self):
         self.real = [1, -2, 4]
-        self.imag = [1, -2, 4]
+        self.imag = [3, -2, -7]
         self.obj = ComplexValuedCoordinates(self.real, self.imag)
 
     def test_init_valid(self):
@@ -73,12 +73,21 @@ class TestComplexValuedCoordinates(unittest.TestCase):
         imag = self.obj.imag
         self.assertTrue(isinstance(imag, np.ndarray))
         self.assertEqual(imag.tolist(), self.imag)
+
     def test_abs_property(self):
         absolute = self.obj.abs
         ref = np.sqrt(np.square(self.real) + np.square(self.imag))
         self.assertTrue(isinstance(absolute, np.ndarray))
-        self.assertEqual(absolute.tolist(), ref)
+        np.testing.assert_array_equal(absolute, ref)
 
+    def test_phase_property(self):
+        real = [1, 0, -1, 0, 1]
+        imag = [0, 1, 0, -1, 1]
+        ref = np.array([0, np.pi/2, np.pi, -np.pi/2, np.pi/4])
+        obj = ComplexValuedCoordinates(real, imag)
+        phase = obj.phase
+        self.assertTrue(isinstance(phase, np.ndarray))
+        np.testing.assert_array_equal(phase, ref)
 
 
 class TestAlphaBetaCoordinates(unittest.TestCase):
