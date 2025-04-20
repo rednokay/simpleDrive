@@ -89,6 +89,14 @@ class ComplexValuedCoordinates():
         """
         return np.imag(self._values)
 
+    @property
+    def abs(self) -> np.ndarray:
+        return np.abs(self._values)
+
+    @property
+    def phase(self):
+        return np.atan2(np.imag(self._values), np.real(self._values))
+
 
 class AlphaBetaCoordinates(ComplexValuedCoordinates):
     """

@@ -73,6 +73,12 @@ class TestComplexValuedCoordinates(unittest.TestCase):
         imag = self.obj.imag
         self.assertTrue(isinstance(imag, np.ndarray))
         self.assertEqual(imag.tolist(), self.imag)
+    def test_abs_property(self):
+        absolute = self.obj.abs
+        ref = np.sqrt(np.square(self.real) + np.square(self.imag))
+        self.assertTrue(isinstance(absolute, np.ndarray))
+        self.assertEqual(absolute.tolist(), ref)
+
 
 
 class TestAlphaBetaCoordinates(unittest.TestCase):
