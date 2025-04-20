@@ -81,8 +81,23 @@ class ComplexValuedCoordinates():
         """
         return np.real(self._values)
 
-    @reak.setter
+    @real.setter
     def real(self, new_real_values: np.ndarray):
+        """
+        Sets the real values of the class' complex values.
+
+        Parameters
+        ----------
+        new_real_values : np.ndarray
+            Real values to set
+
+        Raises
+        ------
+        ValueError
+            Length of the values to set must match the other complex component
+        ValueError
+            The input must be formatted as np.ndarray
+        """
         if len(new_real_values) != len(self.imag):
             raise ValueError(
                 "The real values to set must be of the same length as the existing imaginary values.")
@@ -101,6 +116,31 @@ class ComplexValuedCoordinates():
             Imaginary values of the instance
         """
         return np.imag(self._values)
+
+    @imag.setter
+    def imag(self, new_imag_values: np.ndarray):
+        """
+        Sets the imaginary values of the class' complex values.
+
+        Parameters
+        ----------
+        new_imag_values : np.ndarray
+            Imaginary values to set
+
+        Raises
+        ------
+        ValueError
+            Length of the values to set must match the other complex component
+        ValueError
+            The input must be formatted as np.ndarray
+        """
+        if len(new_imag_values) != len(self.real):
+            raise ValueError(
+                "The imaginary values to set must be of the same length as the existing real values.")
+        if not isinstance(new_imag_values, np.ndarray):
+            raise ValueError(
+                "Imaginary values must be formatted as np.ndarray.")
+        self._values = self.real + 1j*new_imag_values
 
     @property
     def abs(self) -> np.ndarray:
