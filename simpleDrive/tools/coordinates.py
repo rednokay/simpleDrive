@@ -221,6 +221,15 @@ class AlphaBetaCoordinates(ComplexValuedCoordinates):
         return alpha_beta_to_abc(self)
 
 
+class DqCoordinates(ComplexValuedCoordinates):
+    """
+    Rotating reference frame aka alpha-beta coordinates
+    """
+
+    def __init__(self, *args):
+        super().__init__(*args)
+
+
 # TODO: Handling of non-symmetric inputs!
 # TODO: Float or int inputs
 class AbcCoordinates():
