@@ -51,7 +51,40 @@ def abc_to_alpha_beta(abc: AbcCoordinates) -> AlphaBetaCoordinates:
 # TODO: Move args checkin here
 class ComplexValuedCoordinates():
     def __init__(self, *args):
-        self._values = np.array(args[0]) + 1j*np.array(args[1])
+        self._values = None
+
+        # TODO: Test for both arguments instances
+        # Complex number as ndarray
+        if len(args) == 1 and isinstance(args[0], np.ndarray):
+            self._values = args[0]
+
+        # Complex number as list or scalar
+        elif len(args) == 1 and not isinstance(args[0], np.ndarray):
+            self._values = np.array([args[0]]).ravel()
+
+        # Real and imag scalars
+        elif len(args) == 2 and not isinstance(args[0], list) and not isinstance(args[0], np.ndarray):
+            self._values = np.array([args[0] + 1j*args[1]])
+
+        # Real and imag as ndarray
+        elif len(args) == 2 and isinstance(args[0], np.ndarray) and isinstance(args[1], np.ndarray):
+            if len(args[0]) != len(args[1]):
+                raise ValueError(
+                    "Alpha and beta lists must be of equal length")
+            self._values = args[0] + 1j*args[1]
+
+        # Real and imag as list
+        elif len(args) == 2 and isinstance(args[0], list) and isinstance(args[1], list):
+            if len(args[0]) != len(args[1]):
+                raise ValueError(
+                    "Alpha and beta lists must be of equal length")
+            self._values = np.array(
+                np.array(args[0]) + 1j*np.array(args[1]))
+
+        # Other
+        else:
+            raise ValueError(
+                "Could not create alpha-beta-coordinates from given values")
 
     @property
     def cmplx(self) -> np.ndarray:
@@ -142,6 +175,7 @@ class ComplexValuedCoordinates():
                 "Imaginary values must be formatted as np.ndarray.")
         self._values = self.real + 1j*new_imag_values
 
+    # TODO: Add setter
     @property
     def abs(self) -> np.ndarray:
         """
@@ -154,6 +188,7 @@ class ComplexValuedCoordinates():
         """
         return np.abs(self._values)
 
+    # TODO: Add setter
     @property
     def phase(self):
         """

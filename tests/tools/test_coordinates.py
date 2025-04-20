@@ -54,9 +54,65 @@ class TestComplexValuedCoordinates(unittest.TestCase):
         self.imag = [3, -2, -7]
         self.obj = ComplexValuedCoordinates(self.real, self.imag)
 
-    def test_init_valid(self):
+    def test_init_instances(self):
         self.assertTrue(isinstance(self.obj, ComplexValuedCoordinates))
         self.assertTrue(isinstance(self.obj._values, np.ndarray))
+
+    def test_init_single_number(self):
+        cmplx = 0.25 + 1j*2
+        obj = ComplexValuedCoordinates(cmplx)
+
+        self.assertEqual(obj.cmplx.tolist()[0], cmplx)
+        self.assertTrue(isinstance(obj._values, np.ndarray))
+
+    def test_init_single_number_as_list(self):
+        cmplx = [0.25 + 1j*2]
+        obj = ComplexValuedCoordinates(cmplx)
+
+        self.assertEqual(obj.cmplx.tolist(), cmplx)
+        self.assertTrue(isinstance(obj._values, np.ndarray))
+
+    def test_init_ndarray(self):
+        real = [1, -6, -2.5, 0]
+        imag = [4, 3, -9, -3]
+        cmplx = np.array(real) + 1j*np.array(imag)
+        obj = ComplexValuedCoordinates(cmplx)
+
+        np.testing.assert_array_equal(obj.cmplx, cmplx)
+        self.assertTrue(isinstance(obj._values, np.ndarray))
+
+    def test_init_real_and_imag_as_lists(self):
+        real = [1, -6, -2.5, 0]
+        imag = [4, 3, -9, -3]
+        obj = ComplexValuedCoordinates(real, imag)
+
+        self.assertEqual(obj.real.tolist(), real)
+        self.assertEqual(obj.imag.tolist(), imag)
+        self.assertTrue(isinstance(obj._values, np.ndarray))
+
+    def test_init_real_and_imag_as_numbers(self):
+        real = 1
+        imag = 4
+        obj = ComplexValuedCoordinates(real, imag)
+
+        self.assertEqual(obj.real.tolist(), [real])
+        self.assertEqual(obj.imag.tolist(), [imag])
+        self.assertTrue(isinstance(obj._values, np.ndarray))
+
+    def test_init_real_and_imag_as_ndarray(self):
+        real = np.array([1, -6, -2.5, 0])
+        imag = np.array([4, 3, -9, -3])
+        obj = ComplexValuedCoordinates(real, imag)
+
+        np.testing.assert_equal(obj.real, real)
+        np.testing.assert_equal(obj.imag, imag)
+        self.assertTrue(isinstance(obj._values, np.ndarray))
+
+    def test_init_fail(self):
+        real = np.array([1, 0])
+        imag = np.array([4, 3, -9, -3])
+
+        self.assertRaises(ValueError, ComplexValuedCoordinates, real, imag)
 
     def test_cmplx_property(self):
         cmplx = self.obj.cmplx
