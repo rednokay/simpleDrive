@@ -1,0 +1,227 @@
+import unittest
+import numpy as np
+from simpleDrive.tools.coordinates import ComplexValuedCoordinates, AlphaBetaCoordinates, AbcCoordinates, alpha_beta_to_abc, abc_to_alpha_beta
+
+
+class TestAlphaBetaToAbc(unittest.TestCase):
+    def setUp(self):
+        alpha = [1, 0.2, 3]
+        beta = [-1, 3.2, 1]
+        self.alpha_beta = AlphaBetaCoordinates(alpha, beta)
+
+    def test_instance(self):
+        self.assertTrue(isinstance(alpha_beta_to_abc(
+            self.alpha_beta), AbcCoordinates))
+
+    # TODO: test b and c phases
+    def test_number(self):
+        alpha_beta = AlphaBetaCoordinates(1 + 2j)
+        abc = alpha_beta_to_abc(alpha_beta)
+
+        self.assertEqual(abc.abc[0], alpha_beta.real)
+
+    # TODO: test b and c phases
+    def test_ndarray(self):
+        abc = alpha_beta_to_abc(self.alpha_beta)
+
+        np.testing.assert_array_equal(
+            abc.abc[0], self.alpha_beta.real)
+
+
+class TestAbcToAlphaBeta(unittest.TestCase):
+    def setUp(self):
+        a = [1, 3, -1]
+        b = [-1, 5, 0]
+        c = [0, -8, 1]
+        self.abc = AbcCoordinates(a, b, c)
+
+    def test_instance(self):
+        self.assertTrue(isinstance(
+            abc_to_alpha_beta(self.abc), AlphaBetaCoordinates))
+
+    def test_ndarray(self):
+        alpha_beta = abc_to_alpha_beta(self.abc)
+
+        np.testing.assert_array_equal(
+            alpha_beta.real, self.abc.abc[0])
+
+
+class TestComplexValuedCoordinates(unittest.TestCase):
+    def setUp(self):
+        self.real = [1, -2, 4]
+        self.imag = [3, -2, -7]
+        self.obj = ComplexValuedCoordinates(self.real, self.imag)
+
+    def test_init_instances(self):
+        self.assertTrue(isinstance(self.obj, ComplexValuedCoordinates))
+        self.assertTrue(isinstance(self.obj._values, np.ndarray))
+
+    def test_init_single_number(self):
+        cmplx = 0.25 + 1j*2
+        obj = ComplexValuedCoordinates(cmplx)
+
+        self.assertEqual(obj.cmplx.tolist()[0], cmplx)
+        self.assertTrue(isinstance(obj._values, np.ndarray))
+
+    def test_init_single_number_as_list(self):
+        cmplx = [0.25 + 1j*2]
+        obj = ComplexValuedCoordinates(cmplx)
+
+        self.assertEqual(obj.cmplx.tolist(), cmplx)
+        self.assertTrue(isinstance(obj._values, np.ndarray))
+
+    def test_init_ndarray(self):
+        real = [1, -6, -2.5, 0]
+        imag = [4, 3, -9, -3]
+        cmplx = np.array(real) + 1j*np.array(imag)
+        obj = ComplexValuedCoordinates(cmplx)
+
+        np.testing.assert_array_equal(obj.cmplx, cmplx)
+        self.assertTrue(isinstance(obj._values, np.ndarray))
+
+    def test_init_real_and_imag_as_lists(self):
+        real = [1, -6, -2.5, 0]
+        imag = [4, 3, -9, -3]
+        obj = ComplexValuedCoordinates(real, imag)
+
+        self.assertEqual(obj.real.tolist(), real)
+        self.assertEqual(obj.imag.tolist(), imag)
+        self.assertTrue(isinstance(obj._values, np.ndarray))
+
+    def test_init_real_and_imag_as_numbers(self):
+        real = 1
+        imag = 4
+        obj = ComplexValuedCoordinates(real, imag)
+
+        self.assertEqual(obj.real.tolist(), [real])
+        self.assertEqual(obj.imag.tolist(), [imag])
+        self.assertTrue(isinstance(obj._values, np.ndarray))
+
+    def test_init_real_and_imag_as_ndarray(self):
+        real = np.array([1, -6, -2.5, 0])
+        imag = np.array([4, 3, -9, -3])
+        obj = ComplexValuedCoordinates(real, imag)
+
+        np.testing.assert_equal(obj.real, real)
+        np.testing.assert_equal(obj.imag, imag)
+        self.assertTrue(isinstance(obj._values, np.ndarray))
+
+    def test_init_fail(self):
+        real = np.array([1, 0])
+        imag = np.array([4, 3, -9, -3])
+
+        self.assertRaises(ValueError, ComplexValuedCoordinates, real, imag)
+
+    def test_cmplx_property(self):
+        cmplx = self.obj.cmplx
+        self.assertTrue(isinstance(cmplx, np.ndarray))
+        self.assertEqual(np.real(cmplx).tolist(), self.real)
+        self.assertEqual(np.imag(cmplx).tolist(), self.imag)
+
+    def test_real_property(self):
+        real = self.obj.real
+        self.assertTrue(isinstance(real, np.ndarray))
+        self.assertEqual(real.tolist(), self.real)
+
+    def test_imag_property(self):
+        imag = self.obj.imag
+        self.assertTrue(isinstance(imag, np.ndarray))
+        self.assertEqual(imag.tolist(), self.imag)
+
+    def test_abs_property(self):
+        absolute = self.obj.abs
+        ref = np.sqrt(np.square(self.real) + np.square(self.imag))
+        self.assertTrue(isinstance(absolute, np.ndarray))
+        np.testing.assert_array_equal(absolute, ref)
+
+    def test_phase_property(self):
+        real = [1, 0, -1, 0, 1]
+        imag = [0, 1, 0, -1, 1]
+        ref = np.array([0, np.pi/2, np.pi, -np.pi/2, np.pi/4])
+        obj = ComplexValuedCoordinates(real, imag)
+        phase = obj.phase
+        self.assertTrue(isinstance(phase, np.ndarray))
+        np.testing.assert_array_equal(phase, ref)
+
+    def test_real_setter(self):
+        new_real = np.array([-5, 0])
+        self.assertRaises(ValueError, lambda: setattr(
+            self.obj, "real", new_real))
+
+        new_real = [-5, 0, 1]
+        self.assertRaises(ValueError, lambda: setattr(
+            self.obj, "real", new_real))
+
+        new_real = np.array([-5, 0, 1])
+        self.obj.real = new_real
+        np.testing.assert_array_equal(self.obj.real, new_real)
+        np.testing.assert_array_equal(self.obj.imag, self.imag)
+
+    def test_imag_setter(self):
+        new_imag = np.array([-5, 0])
+        self.assertRaises(ValueError, lambda: setattr(
+            self.obj, "imag", new_imag))
+
+        new_imag = [-5, 0, 1]
+        self.assertRaises(ValueError, lambda: setattr(
+            self.obj, "imag", new_imag))
+
+        new_imag = np.array([-5, 0, 1])
+        self.obj.imag = new_imag
+        np.testing.assert_array_equal(self.obj.imag, new_imag)
+        np.testing.assert_array_equal(self.obj.real, self.real)
+
+
+class TestAlphaBetaCoordinates(unittest.TestCase):
+    def setUp(self):
+        self.phi = np.linspace(0, 2*np.pi, 10)
+        self.alpha = np.cos(self.phi)
+        self.beta = np.sin(self.phi)
+        self.obj = AlphaBetaCoordinates(self.alpha, self.beta)
+    
+    def test_instance(self):
+        self.assertTrue(isinstance(self.obj, AlphaBetaCoordinates))
+        self.assertTrue(isinstance(self.obj, ComplexValuedCoordinates))
+
+    def test_to_abc(self):
+        abc_ref = alpha_beta_to_abc(self.obj)
+        abc = self.obj.to_abc()
+
+        self.assertTrue(isinstance(abc, AbcCoordinates))
+        np.testing.assert_array_equal(abc_ref.abc, abc.abc)
+
+
+class TestAbcCoordinates(unittest.TestCase):
+    def test_init_single_ndarray(self):
+        abc_ref = np.array([[1, 2, 3], [3, 1, 2], [2, 3, 1]])
+        abc = AbcCoordinates(abc_ref)
+
+        np.testing.assert_array_equal(abc_ref, abc.abc)
+
+    def test_init_single_list(self):
+        abc_ref = [[1, 2, 3], [3, 1, 2], [2, 3, 1]]
+        abc = AbcCoordinates(abc_ref)
+
+        np.testing.assert_array_equal(np.array(abc_ref), abc.abc)
+
+    def test_init_mixed(self):
+        al = [1, 2, 3]
+        bl = [3, 1, 2]
+        cl = [2, 3, 1]
+
+        a = np.array(al)
+        c = np.array(cl)
+
+        abc_ref = np.array([al, bl, cl])
+
+        abc = AbcCoordinates(a, bl, c)
+
+        np.testing.assert_array_equal(np.array(abc_ref), abc.abc)
+
+        self.assertRaises(ValueError, AbcCoordinates, 1, bl, cl)
+
+    def test_wrong_amount_of_input_variables(self):
+        al = [1, 2, 3]
+        bl = [3, 1, 2]
+
+        self.assertRaises(ValueError, AbcCoordinates, al, bl)
