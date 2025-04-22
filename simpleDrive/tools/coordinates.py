@@ -240,11 +240,15 @@ class AbcCoordinates():
     # TODO: Check for equal length of each array
     def __init__(self, *args):
         self.abc = None
-        if len(args) == 1 and isinstance(args[0], np.ndarray):
+        args_length = len(args)
+        if args_length == 2 or args_length >= 4:
+            raise ValueError(
+                "Either needs one input containing all three phases or three input containing one phase each.")
+        if args_length == 1 and isinstance(args[0], np.ndarray):
             self.abc = args[0]
-        elif len(args) == 1 and isinstance(args[0], list):
+        elif args_length == 1 and isinstance(args[0], list):
             self.abc = np.array(args[0])
-        elif len(args) == 3:
+        elif args_length == 3:
             abc = []
             for arg in args:
                 if isinstance(arg, np.ndarray):
@@ -257,6 +261,14 @@ class AbcCoordinates():
             self.abc = np.array(abc)
         else:
             raise ValueError("Could not create ABC-values from selection.")
+
+        if len(set(len(arr) for arr in self.abc)) > 1:
+            raise ValueError(
+                "The number of elements of each phase must be equal.")
+
+        if sum(np.sum(self.abc, axis=0)) != 0:
+            raise ValueError(
+                "The ABC system needs to be symmetric, the sum of A, B and C must vanish.")
 
     def __str__(self):
         """

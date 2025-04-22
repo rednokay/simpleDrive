@@ -212,9 +212,13 @@ class TestAbcCoordinates():
     @pytest.mark.parametrize(
         "args,expected_err",
         [
-            (([1, 2, 0], [-1, 0, 11]), ValueError)
+            (([1, 2, 0], [-1, 0, 11]), ValueError),
+
+            (([1, 2, 0], [-1, 0, 11], [0, -2, 1]), ValueError),
+
+            (([1, 0], [-1, 0, 11], [0, -2, 1]), ValueError)
         ],
-        ids=["two_inputs"]
+        ids=["two_inputs", "not_symmetric", "unequal_length"]
     )
     def test_invalid_init(self, args, expected_err):
         with pytest.raises(expected_err):
