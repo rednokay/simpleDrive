@@ -9,6 +9,10 @@ class AlphaBetaCoordinates:
     pass
 
 
+class DqCoordinates:
+    pass
+
+
 def alpha_beta_to_abc(alpha_beta: AlphaBetaCoordinates) -> AbcCoordinates:
     """
     Compute alpha-beta to abc transform.
@@ -46,6 +50,34 @@ def abc_to_alpha_beta(abc: AbcCoordinates) -> AlphaBetaCoordinates:
     T = np.array([[2/3, -1/3, -1/3], [0, 1/np.sqrt(3), -1/np.sqrt(3)]])
     transformed = T@abc.abc
     return AlphaBetaCoordinates(transformed[0], transformed[1])
+
+
+def dq_to_alpha_beta(dq: DqCoordinates, theta) -> AlphaBetaCoordinates:
+    """
+    Transforms from the dq-system to the alpha-beta-system.
+
+    Parameters
+    ----------
+    dq : DqCoordinates
+        Dq-coordinates to transform
+    theta : complex, list or np.ndarray
+        Electric rotor position angle, single values will apply to all, list or array will apply by element
+
+    Returns
+    -------
+    AlphaBetaCoordinates
+        Transformed alpha-beta values
+
+    Raises
+    ------
+    ValueError
+        The theta array must be of the same length as the dq-values
+    """
+    theta = np.asarray(theta)
+    if theta.ndim > 0 and len(theta) != len(dq.cmplx):
+        raise ValueError("theta array must have same length as the dq-values")
+
+    return AlphaBetaCoordinates(dq.cmplx*np.exp(1j*theta))
 
 
 class ComplexValuedCoordinates():

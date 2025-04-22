@@ -229,3 +229,33 @@ class TestAbcCoordinates():
         assert isinstance(alpha_beta, crds.AlphaBetaCoordinates)
         assert np.array_equal(
             alpha_beta.cmplx, crds.abc_to_alpha_beta(sample_abc).cmplx)
+
+
+class TestDqToAlphaBeta():
+    def test_instance(self, sample_dq):
+        theta = np.pi/2
+        transform = crds.dq_to_alpha_beta(sample_dq, theta)
+        assert isinstance(transform, crds.AlphaBetaCoordinates)
+
+    @pytest.mark.parametrize(
+        "dq,theta,expected_alpha_beta",
+        [
+            ([1 + 1J, -3, -1.5j], np.pi/2, [-1 + 1j, -1j*3, 1.5]),
+
+            ([1 + 1J, -3, -1.5j], [np.pi/2, -np.pi/2, np.pi], [-1 + 1j, 1j*3, 1j*1.5]),
+
+            ([1 + 1J, -3, -1.5j], np.array([np.pi/2, -np.pi/2, np.pi]),
+             [-1 + 1j, 1j*3, 1j*1.5])
+        ],
+        ids=["ndarray_single_theta", "ndarray_list_theta",
+             "ndarray_ndarray_theta"]
+    )
+    def test_correct_transform(self, dq, theta, expected_alpha_beta):
+        dq = crds.DqCoordinates(dq)
+        transformed = crds.dq_to_alpha_beta(dq, theta).cmplx.tolist()
+        assert expected_alpha_beta == pytest.approx(
+            transformed, rel=1e-3, abs=1e-3)
+
+    def test_invalid_transform(self, sample_dq):
+        with pytest.raises(ValueError):
+            alpha_beta = crds.dq_to_alpha_beta(sample_dq, [np.pi, np.pi/3])
