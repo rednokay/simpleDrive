@@ -282,4 +282,4 @@ class AbcCoordinates():
         return str(self.abc)
 
     def to_alpha_beta(self):
-        pass
+        return abc_to_alpha_beta(self)

@@ -223,3 +223,9 @@ class TestAbcCoordinates():
     def test_invalid_init(self, args, expected_err):
         with pytest.raises(expected_err):
             abc = crds.AbcCoordinates(*args)
+
+    def test_to_alpha_beta(self, sample_abc):
+        alpha_beta = sample_abc.to_alpha_beta()
+        assert isinstance(alpha_beta, crds.AlphaBetaCoordinates)
+        assert np.array_equal(
+            alpha_beta.cmplx, crds.abc_to_alpha_beta(sample_abc).cmplx)
