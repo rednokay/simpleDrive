@@ -211,12 +211,12 @@ class AlphaBetaCoordinates(ComplexValuedCoordinates):
 
     def to_abc(self) -> AbcCoordinates:
         """
-        Transforms to three-phase abc coordinates
+        Compute alpha-beta to abc transform.
 
         Returns
         -------
         AbcCoordinates
-            Transformed values in AbcCoordinates
+            Transformed values in ABC-coordinates
         """
         return alpha_beta_to_abc(self)
 
@@ -281,5 +281,13 @@ class AbcCoordinates():
         """
         return str(self.abc)
 
-    def to_alpha_beta(self):
+    def to_alpha_beta(self) -> AlphaBetaCoordinates:
+        """
+        Compute abc to alpha-beta transform.
+
+        Returns
+        -------
+        AlphaBetaCoordinates
+            Transformed values in alpha-beta-coordinates
+        """
         return abc_to_alpha_beta(self)
