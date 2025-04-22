@@ -80,6 +80,35 @@ def dq_to_alpha_beta(dq: DqCoordinates, theta) -> AlphaBetaCoordinates:
     return AlphaBetaCoordinates(dq.cmplx*np.exp(1j*theta))
 
 
+def alpha_beta_to_dq(alpha_beta: AlphaBetaCoordinates, theta) -> DqCoordinates:
+    """
+    Transforms from alpha-beta-system to the dq-system.
+
+    Parameters
+    ----------
+    alpha_beta : AlphaBetaCoordinates
+        Alpha-beta coordinates to transform
+    theta : complex, list ot np.ndarray
+        Electric rotor postion angle, single values will apply to all, list or array will apply by element
+
+    Returns
+    -------
+    DqCoordinates
+        Transformed dq-coordinates
+
+    Raises
+    ------
+    ValueError
+        The theta array must be of the same length as the alpha-beta-values
+    """
+    theta = np.asarray(theta)
+    if theta.ndim > 0 and len(theta) != len(alpha_beta.cmplx):
+        raise ValueError(
+            "theta array must have same length as the alpha-beta-values")
+
+    return DqCoordinates(alpha_beta.cmplx*np.exp(-1j*theta))
+
+
 class ComplexValuedCoordinates():
     def __init__(self, *args):
         self._values = None
