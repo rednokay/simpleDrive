@@ -177,4 +177,45 @@ class TestDqCoordinates():
         assert isinstance(sample_dq, crds.DqCoordinates)
         assert isinstance(sample_dq, crds.ComplexValuedCoordinates)
 
-# TODO: AbcCoordinates
+
+class TestAbcCoordinates():
+    def test_instance(self, sample_abc):
+        assert isinstance(sample_abc, crds.AbcCoordinates)
+
+    @pytest.mark.parametrize(
+        "args,expected_values",
+        [
+            ((np.array([[4, 0, -3], [1, 7, -4], [-5, -7, 7]]),),
+             np.array([[4, 0, -3], [1, 7, -4], [-5, -7, 7]])),
+
+            (([[4, 0, -3], [1, 7, -4], [-5, -7, 7]],),
+             np.array([[4, 0, -3], [1, 7, -4], [-5, -7, 7]])),
+
+            (([4, 0, -3], [1, 7, -4], [-5, -7, 7]),
+             np.array([[4, 0, -3], [1, 7, -4], [-5, -7, 7]])),
+
+            ((np.array([4, 0, -3]), np.array([1, 7, -4]), np.array([-5, -7, 7])),
+             np.array([[4, 0, -3], [1, 7, -4], [-5, -7, 7]])),
+
+            ((np.array([4, 0, -3]), [1, 7, -4], np.array([-5, -7, 7])),
+             np.array([[4, 0, -3], [1, 7, -4], [-5, -7, 7]]))
+        ],
+        ids=["single_array", "single_list",
+             "seperate_lists", "seperate_ndarrays",
+             "seperate_mixed"]
+    )
+    def test_valid_init(self, args, expected_values):
+        abc = crds.AbcCoordinates(*args)
+        assert isinstance(abc, crds.AbcCoordinates)
+        assert np.array_equal(abc.abc, expected_values)
+
+    @pytest.mark.parametrize(
+        "args,expected_err",
+        [
+            (([1, 2, 0], [-1, 0, 11]), ValueError)
+        ],
+        ids=["two_inputs"]
+    )
+    def test_invalid_init(self, args, expected_err):
+        with pytest.raises(expected_err):
+            abc = crds.AbcCoordinates(*args)
