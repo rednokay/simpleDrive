@@ -261,6 +261,38 @@ class ComplexValuedCoordinates():
         """
         return np.atan2(np.imag(self._values), np.real(self._values))
 
+    def to_alpha_beta(self, theta) -> AlphaBetaCoordinates:
+        """
+        Transfroms complex coordinates to the alpha-beta-system.
+
+        Parameters
+        ----------
+        theta : complex, list or np.array
+            Electric rotor postion angle, single values will apply to all, list or array will apply by element
+
+        Returns
+        -------
+        AlphaBetaCoordinates
+            Transformed alpha-beta values
+        """
+        return dq_to_alpha_beta(self, theta)
+
+    def to_dq(self, theta) -> DqCoordinates:
+        """
+        Transforms from alpha-beta-system to the dq-system.
+
+        Parameters
+        ----------
+        theta : complex, list ot np.ndarray
+            Electric rotor postion angle, single values will apply to all, list or array will apply by element
+
+        Returns
+        -------
+        DqCoordinates
+            Transformed dq-coordinates
+        """
+        return alpha_beta_to_dq(self, theta)
+
 
 class AlphaBetaCoordinates(ComplexValuedCoordinates):
     """

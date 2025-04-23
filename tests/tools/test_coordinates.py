@@ -156,6 +156,46 @@ class TestComplexValuedCoordinates():
         assert np.array_equal(sample_cmplx.imag, new_imag)
         assert np.array_equal(sample_cmplx.real, real)
 
+    @pytest.mark.parametrize(
+        "dq,theta,expected_alpha_beta",
+        [
+            ([1 + 1J, -3, -1.5j], np.pi/2, [-1 + 1j, -1j*3, 1.5]),
+
+            ([1 + 1J, -3, -1.5j], [np.pi/2, -np.pi/2, np.pi], [-1 + 1j, 1j*3, 1j*1.5]),
+
+            ([1 + 1J, -3, -1.5j], np.array([np.pi/2, -np.pi/2, np.pi]),
+             [-1 + 1j, 1j*3, 1j*1.5])
+        ],
+        ids=["ndarray_single_theta", "ndarray_list_theta",
+             "ndarray_ndarray_theta"]
+    )
+    def test_to_alpha_beta(self, dq, theta, expected_alpha_beta):
+        dq = crds.ComplexValuedCoordinates(dq)
+        alpha_beta = dq.to_alpha_beta(theta)
+        assert isinstance(alpha_beta, crds.AlphaBetaCoordinates)
+        assert expected_alpha_beta == pytest.approx(
+            alpha_beta.cmplx.tolist(), rel=1e-3, abs=1e-3)
+
+    @pytest.mark.parametrize(
+        "alpha_beta,theta,expected_dq",
+        [
+            ([1 + 1J, -3, -1.5j], -np.pi/2, [-1 + 1j, -1j*3, 1.5]),
+
+            ([1 + 1J, -3, -1.5j], [-np.pi/2, np.pi/2, -np.pi], [-1 + 1j, 1j*3, 1j*1.5]),
+
+            ([1 + 1J, -3, -1.5j], np.array([-np.pi/2, np.pi/2, -np.pi]),
+             [-1 + 1j, 1j*3, 1j*1.5])
+        ],
+        ids=["ndarray_single_theta", "ndarray_list_theta",
+             "ndarray_ndarray_theta"]
+    )
+    def test_to_dq(self, alpha_beta, theta, expected_dq):
+        alpha_beta = crds.ComplexValuedCoordinates(alpha_beta)
+        dq = alpha_beta.to_dq(theta)
+        assert isinstance(dq, crds.DqCoordinates)
+        assert expected_dq == pytest.approx(
+            dq.cmplx.tolist(), rel=1e-3, abs=1e-3)
+
 
 class TestAlphaBetaCoordinates():
     def test_instance(self, sample_alpha_beta):
