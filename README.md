@@ -1,16 +1,18 @@
 # simpleDrive
 
-## Important
-
-This project is no longer developed as my Master’s Thesis moved towards Matlab/Simulink.
-
 ## The Project
 
-This is an educational focused package for simulating and visualizing electric drives and will at some point hopefully include controller, converter and machine.
+This is an education-focused Python library focused on visualizing various PMSM control principles.
 
 The project is currently very much work in progress and is being developed alongsite my Master's thesis.
 
+## Currently Capable Of
 
-## License
+Nothing, just started a soft reset of the project.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## TODO
+
+- Space-Vector Modulation
+- Overmodulation
+- Six-step operation
+- Field-oriented control/current vector control
