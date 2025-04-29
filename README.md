@@ -1,5 +1,9 @@
 # simpleDrive
 
+## Important
+
+This project is no longer developed as my Master’s Thesis moved towards Matlab/Simulink.
+
 ## The Project
 
 This is an educational focused package for simulating and visualizing electric drives and will at some point hopefully include controller, converter and machine.
