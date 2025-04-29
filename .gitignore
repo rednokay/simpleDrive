@@ -9,6 +9,7 @@ __pycache__/
 
 # Environments
 .venv
+venv
 
 # Playground
 spielwiese.py
