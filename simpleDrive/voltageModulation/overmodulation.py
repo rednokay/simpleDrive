@@ -58,6 +58,25 @@ def minimum_phase_error(u_alphaBeta_ref: complex | np.ndarray, U_DC: float = 1) 
 
 
 def minimum_distance(u_alphaBeta_ref: complex | np.ndarray, U_DC: float = 1) -> float | np.ndarray:
+    """
+    Computes a references voltage following the minimum distance OVM.
+
+    Parameters
+    ----------
+    u_alphaBeta_ref : complex | np.ndarray
+        Input voltage to be truncated according to the OVM
+    U_DC : float
+        DC-link voltage in V, by default 1 which yields a normalized result
+
+    Returns
+    -------
+    float | np.ndarray
+        Truncated voltage following the OVM
+
+    Literature
+    -------
+    [1] Y.-C. Kwon, S. Kim, and S.-K. Sul, “Six-Step Operation of PMSM With Instantaneous Current Control,” IEEE Transactions on Industry Applications, vol. 50, no. 4, pp. 2614–2625, Jul. 2014, doi: 10.1109/TIA.2013.2296652.
+    """
     phase = np.atan2(np.imag(u_alphaBeta_ref), np.real(u_alphaBeta_ref))
     u_alphaBeta_lim = voltage_limit(phase, U_DC)
 
