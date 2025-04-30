@@ -191,19 +191,25 @@ class TestMinimumDistance:
         (
             (35 * np.pi / 180),
             (333 * np.pi / 180),
+            (265 * np.pi / 180),
+            (311.7 * np.pi / 180),
+            (188 * np.pi / 180),
         ),
     )
     def test_geometric(self, phi, tol):
-        u_abs = 1.5
-        phi_map = -np.floor(phi * 3 / np.pi) * np.pi / 3 - np.pi / 6
+        u_abs = 10
         u_ref = u_abs * np.exp(1j * phi)
-        u_res = ovm.minimum_phase_error(u_ref)
+        u_res = ovm.minimum_distance(u_ref)
+
+        phi_map = -np.floor(phi * 3 / np.pi) * np.pi / 3 - np.pi / 6
+        u_ref_map = u_ref * np.exp(1j * phi_map)
         u_res_map = u_res * np.exp(1j * phi_map)
 
-        u_real_exp = 1 / np.sqrt(3)
-        u_imag_exp = np.imag(u_res)
-        u_real_res = np.real(u_res_map)
-        u_imag_res = np.imag(u_res_map)
-
-        assert pytest.approx(u_real_res, **tol) == u_real_exp
-        assert pytest.approx(u_imag_res, **tol) == u_imag_exp
+        assert pytest.approx(np.real(u_res_map), **tol) == 1 / np.sqrt(3)
+        assert np.imag(u_res_map) >= -1 / 3 - tol.get("abs")
+        assert np.imag(u_res_map) <= 1 / 3 + tol.get("abs")
+        assert (
+            pytest.approx(np.imag(u_res_map), **tol) == np.imag(u_ref_map)
+            if np.abs(np.imag(u_ref_map)) < 1 / 3
+            else True
+        )
