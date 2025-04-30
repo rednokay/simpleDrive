@@ -47,7 +47,7 @@ def minimum_phase_error(
     -------
     [1] Y.-C. Kwon, S. Kim, and S.-K. Sul, “Six-Step Operation of PMSM With Instantaneous Current Control,” IEEE Transactions on Industry Applications, vol. 50, no. 4, pp. 2614–2625, Jul. 2014, doi: 10.1109/TIA.2013.2296652.
     """
-    phi = np.atan2(np.imag(u_alphaBeta_ref), np.real(u_alphaBeta_ref))
+    phi = np.angle(u_alphaBeta_ref)
     u_alphaBeta_lim = voltage_limit(phi, U_DC)
 
     if isinstance(u_alphaBeta_ref, np.ndarray):
@@ -82,7 +82,7 @@ def minimum_distance(
     -------
     [1] Y.-C. Kwon, S. Kim, and S.-K. Sul, “Six-Step Operation of PMSM With Instantaneous Current Control,” IEEE Transactions on Industry Applications, vol. 50, no. 4, pp. 2614–2625, Jul. 2014, doi: 10.1109/TIA.2013.2296652.
     """
-    phase = np.atan2(np.imag(u_alphaBeta_ref), np.real(u_alphaBeta_ref))
+    phase = np.angle(u_alphaBeta_ref)
     u_alphaBeta_lim = voltage_limit(phase, U_DC)
 
     phi = phase - np.floor(phase * 3 / np.pi) * np.pi / 3 - np.pi / 6
