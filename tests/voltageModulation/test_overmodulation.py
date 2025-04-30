@@ -193,11 +193,11 @@ class TestMinimumDistance:
             (333 * np.pi / 180),
             (265 * np.pi / 180),
             (311.7 * np.pi / 180),
-            (188 * np.pi / 180),
+            (np.array([188, 95, 0, 18]) * np.pi / 180),
         ),
     )
     def test_geometric(self, phi, tol):
-        u_abs = 10
+        u_abs = 1.5
         u_ref = u_abs * np.exp(1j * phi)
         u_res = ovm.minimum_distance(u_ref)
 
@@ -205,11 +205,31 @@ class TestMinimumDistance:
         u_ref_map = u_ref * np.exp(1j * phi_map)
         u_res_map = u_res * np.exp(1j * phi_map)
 
-        assert pytest.approx(np.real(u_res_map), **tol) == 1 / np.sqrt(3)
-        assert np.imag(u_res_map) >= -1 / 3 - tol.get("abs")
-        assert np.imag(u_res_map) <= 1 / 3 + tol.get("abs")
-        assert (
-            pytest.approx(np.imag(u_res_map), **tol) == np.imag(u_ref_map)
-            if np.abs(np.imag(u_ref_map)) < 1 / 3
-            else True
+        if isinstance(u_res_map, np.ndarray):
+            u_real_exp = (1 / np.sqrt(3) * np.ones(len(u_res))).tolist()
+        else:
+            u_real_exp = 1 / np.sqrt(3)
+
+        u_imag_exp = np.imag(u_ref_map)
+        if isinstance(u_imag_exp, np.ndarray):
+            u_imag_exp[u_imag_exp > 1 / 3] = 1 / 3 * np.ones(len([u_imag_exp > 1 / 3]))
+            u_imag_exp[u_imag_exp < -1 / 3] = (
+                -1 / 3 * np.ones(len([u_imag_exp < -1 / 3]))
+            )
+            u_imag_exp = u_imag_exp.tolist()
+        elif u_imag_exp > 1 / 3:
+            u_imag_exp = 1 / 3
+        elif u_imag_exp < -1 / 3:
+            u_imag_exp = -1 / 3
+
+        u_real_res = np.real(u_res_map)
+        u_real_res = (
+            u_real_res.tolist() if isinstance(u_real_res, np.ndarray) else u_real_res
         )
+        u_imag_res = np.imag(u_res_map)
+        u_imag_res = (
+            u_imag_res.tolist() if isinstance(u_imag_res, np.ndarray) else u_imag_res
+        )
+
+        assert pytest.approx(u_real_res, **tol) == u_real_exp
+        assert pytest.approx(u_imag_res, **tol) == u_imag_exp
