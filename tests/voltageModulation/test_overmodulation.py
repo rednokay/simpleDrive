@@ -13,6 +13,11 @@ def tol():
     return {'rel': 1e-5, 'abs': 1e-5}
 
 
+@pytest.fixture
+def phi30():
+    return np.linspace(0, 2*np.pi - np.pi/6, 12)
+
+
 class TestVoltageLimit():
     @pytest.mark.parametrize(
         "phase, normalized_limit",
@@ -59,3 +64,50 @@ class TestVoltageLimit():
                        2 == 0 else U_DC/np.sqrt(3) for i in range(12)]
 
         assert vl_expected == pytest.approx(vl_result, **tol)
+
+
+class TestMinimumPhaseError():
+    @pytest.mark.parametrize(
+        "un",
+        [
+            (1.1*np.exp(1j*np.pi/5)),
+
+            (np.array([1.1*np.exp(1j*np.pi/5), 1.1 *
+             np.exp(-1j*np.pi/2), 1.1*np.exp(1j*3*np.pi/5)]))
+        ],
+        ids=["complex", "ndarray"]
+    )
+    def test_input_size(self, un, U_DC, tol):
+        u = ovm.minimum_phase_error(U_DC*un, U_DC)
+        u_result = u.tolist() if isinstance(u, np.ndarray) else u
+        phase = np.atan2(np.imag(un), np.real(un))
+        ue = ovm.voltage_limit(phase, U_DC)*np.exp(1j*phase)
+        u_expected = ue.tolist() if isinstance(u, np.ndarray) else ue
+
+        assert u_expected == pytest.approx(u_result, **tol)
+        assert isinstance(u, complex) | isinstance(u, np.ndarray)
+
+    def test_linear(self, phi30, tol):
+        u_abs = 0.5
+        u_ref = u_abs*np.exp(1j*phi30)
+        u_abs_res = (np.abs(ovm.minimum_phase_error(u_ref, 1))).tolist()
+        u_abs_expected = [u_abs for _ in range(len(u_abs_res))]
+
+        assert pytest.approx(u_abs_res, **tol) == u_abs_expected
+
+    def test_sat(self, phi30, tol):
+        u_abs = 1
+        u_ref = u_abs*np.exp(1j*phi30)
+        u_abs_res = (np.abs(ovm.minimum_phase_error(u_ref, 1))).tolist()
+        u_abs_expected = ovm.voltage_limit(phi30, 1).tolist()
+
+        assert pytest.approx(u_abs_res, **tol) == u_abs_expected
+
+    def test_ovm(self, phi30, tol):
+        u_abs = 0.63
+        u_ref = u_abs*np.exp(1j*phi30)
+        u_abs_res = (np.abs(ovm.minimum_phase_error(u_ref, 1))).tolist()
+        u_abs_expected = [u_abs if i % 2 == 0 else 1 /
+                          np.sqrt(3) for i in range(len(u_abs_res))]
+
+        assert pytest.approx(u_abs_res, **tol) == u_abs_expected
