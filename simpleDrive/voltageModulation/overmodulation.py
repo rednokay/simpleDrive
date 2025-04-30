@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def voltage_limit(phase: float | np.ndarray, U_DC: float) -> float | np.ndarray:
+def voltage_limit(phase: float | np.ndarray, U_DC: float = 1) -> float | np.ndarray:
     """
     Computes the hexagonal voltage limit of an voltage-source inverter.
 
@@ -10,7 +10,7 @@ def voltage_limit(phase: float | np.ndarray, U_DC: float) -> float | np.ndarray:
     phase : float | np.ndarray
         Phase angle in question in rad
     U_DC : float
-        DC-link voltage in V
+        DC-link voltage in V, by default 1 which yields a normalized result
 
     Returns
     -------
@@ -25,7 +25,7 @@ def voltage_limit(phase: float | np.ndarray, U_DC: float) -> float | np.ndarray:
     return np.abs(np.array(x_max + 1j*y_max))
 
 
-def minimum_phase_error(u_alphaBeta_ref: complex | np.ndarray, U_DC: float) -> float | np.ndarray:
+def minimum_phase_error(u_alphaBeta_ref: complex | np.ndarray, U_DC: float = 1) -> float | np.ndarray:
     """
     Computes a references voltage following the minimum phase error OVM.
 
@@ -34,7 +34,7 @@ def minimum_phase_error(u_alphaBeta_ref: complex | np.ndarray, U_DC: float) -> f
     u_alphaBeta_ref : complex | np.ndarray
         Input voltage to be truncated according to the OVM
     U_DC : float
-        DC-link voltage
+        DC-link voltage in V, by default 1 which yields a normalized result
 
     Returns
     -------
