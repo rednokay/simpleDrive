@@ -90,7 +90,7 @@ class TestMinimumPhaseError():
     def test_linear(self, phi30, tol):
         u_abs = 0.5
         u_ref = u_abs*np.exp(1j*phi30)
-        u_abs_res = (np.abs(ovm.minimum_phase_error(u_ref, 1))).tolist()
+        u_abs_res = (np.abs(ovm.minimum_phase_error(u_ref))).tolist()
         u_abs_expected = [u_abs for _ in range(len(u_abs_res))]
 
         assert pytest.approx(u_abs_res, **tol) == u_abs_expected
@@ -98,7 +98,7 @@ class TestMinimumPhaseError():
     def test_sat(self, phi30, tol):
         u_abs = 1
         u_ref = u_abs*np.exp(1j*phi30)
-        u_abs_res = (np.abs(ovm.minimum_phase_error(u_ref, 1))).tolist()
+        u_abs_res = (np.abs(ovm.minimum_phase_error(u_ref))).tolist()
         u_abs_expected = ovm.voltage_limit(phi30, 1).tolist()
 
         assert pytest.approx(u_abs_res, **tol) == u_abs_expected
@@ -106,7 +106,7 @@ class TestMinimumPhaseError():
     def test_ovm(self, phi30, tol):
         u_abs = 0.63
         u_ref = u_abs*np.exp(1j*phi30)
-        u_abs_res = (np.abs(ovm.minimum_phase_error(u_ref, 1))).tolist()
+        u_abs_res = (np.abs(ovm.minimum_phase_error(u_ref))).tolist()
         u_abs_expected = [u_abs if i % 2 == 0 else 1 /
                           np.sqrt(3) for i in range(len(u_abs_res))]
 
