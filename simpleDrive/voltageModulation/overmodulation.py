@@ -17,15 +17,17 @@ def voltage_limit(phase: float | np.ndarray, U_DC: float = 1) -> float | np.ndar
     float | np.ndarray
         The absolute value of the limit
     """
-    phi = phase - np.floor(phase*3/np.pi)*np.pi/3 - np.pi/6
+    phi = phase - np.floor(phase * 3 / np.pi) * np.pi / 3 - np.pi / 6
 
-    x_max = 1/np.sqrt(3)*U_DC
-    y_max = np.tan(phi)*x_max
+    x_max = 1 / np.sqrt(3) * U_DC
+    y_max = np.tan(phi) * x_max
 
-    return np.abs(np.array(x_max + 1j*y_max))
+    return np.abs(np.array(x_max + 1j * y_max))
 
 
-def minimum_phase_error(u_alphaBeta_ref: complex | np.ndarray, U_DC: float = 1) -> float | np.ndarray:
+def minimum_phase_error(
+    u_alphaBeta_ref: complex | np.ndarray, U_DC: float = 1
+) -> float | np.ndarray:
     """
     Computes a references voltage following the minimum phase error OVM.
 
@@ -49,15 +51,18 @@ def minimum_phase_error(u_alphaBeta_ref: complex | np.ndarray, U_DC: float = 1) 
     u_alphaBeta_lim = voltage_limit(phi, U_DC)
 
     if isinstance(u_alphaBeta_ref, np.ndarray):
-        u_alphaBeta_ref[np.abs(u_alphaBeta_ref) > u_alphaBeta_lim] = u_alphaBeta_lim[np.abs(
-            u_alphaBeta_ref) > u_alphaBeta_lim]*np.exp(1j*phi[np.abs(u_alphaBeta_ref) > u_alphaBeta_lim])
+        u_alphaBeta_ref[np.abs(u_alphaBeta_ref) > u_alphaBeta_lim] = u_alphaBeta_lim[
+            np.abs(u_alphaBeta_ref) > u_alphaBeta_lim
+        ] * np.exp(1j * phi[np.abs(u_alphaBeta_ref) > u_alphaBeta_lim])
     elif u_alphaBeta_ref > u_alphaBeta_lim:
-        u_alphaBeta_ref = u_alphaBeta_lim*np.exp(1j*phi)
+        u_alphaBeta_ref = u_alphaBeta_lim * np.exp(1j * phi)
 
     return u_alphaBeta_ref
 
 
-def minimum_distance(u_alphaBeta_ref: complex | np.ndarray, U_DC: float = 1) -> float | np.ndarray:
+def minimum_distance(
+    u_alphaBeta_ref: complex | np.ndarray, U_DC: float = 1
+) -> float | np.ndarray:
     """
     Computes a references voltage following the minimum distance OVM.
 
@@ -80,28 +85,29 @@ def minimum_distance(u_alphaBeta_ref: complex | np.ndarray, U_DC: float = 1) -> 
     phase = np.atan2(np.imag(u_alphaBeta_ref), np.real(u_alphaBeta_ref))
     u_alphaBeta_lim = voltage_limit(phase, U_DC)
 
-    phi = phase - np.floor(phase*3/np.pi)*np.pi/3 - np.pi/6
+    phi = phase - np.floor(phase * 3 / np.pi) * np.pi / 3 - np.pi / 6
 
     if isinstance(u_alphaBeta_ref, np.ndarray):
         mask = np.abs(u_alphaBeta_ref) > u_alphaBeta_lim
 
         if any(mask):
-            x = 1/np.sqrt(3)*U_DC*np.ones(np.size(u_alphaBeta_ref))
-            y = np.imag(abs(u_alphaBeta_ref)*np.exp(1j*phi))
+            x = 1 / np.sqrt(3) * U_DC * np.ones(np.size(u_alphaBeta_ref))
+            y = np.imag(abs(u_alphaBeta_ref) * np.exp(1j * phi))
 
-            y = np.minimum(np.maximum(y, -1/3*U_DC), 1/3*U_DC)
+            y = np.minimum(np.maximum(y, -1 / 3 * U_DC), 1 / 3 * U_DC)
             new_phase = np.atan2(y, x)[mask]
-            new_abs = np.abs(np.array(x + 1j*y))[mask]
-            u_alphaBeta_ref[mask] = new_abs * \
-                np.exp(1j*(new_phase + phase[mask] - phi[mask]))
+            new_abs = np.abs(np.array(x + 1j * y))[mask]
+            u_alphaBeta_ref[mask] = new_abs * np.exp(
+                1j * (new_phase + phase[mask] - phi[mask])
+            )
 
     elif np.abs(u_alphaBeta_ref) > u_alphaBeta_lim:
-        x = 1/np.sqrt(3)*U_DC
-        y = np.imag(abs(u_alphaBeta_ref)*np.exp(1j*phi))
+        x = 1 / np.sqrt(3) * U_DC
+        y = np.imag(abs(u_alphaBeta_ref) * np.exp(1j * phi))
 
-        y = np.minimum(np.maximum(y, -1/3*U_DC), 1/3*U_DC)
+        y = np.minimum(np.maximum(y, -1 / 3 * U_DC), 1 / 3 * U_DC)
         new_phase = np.atan2(y, x)
-        new_abs = np.abs(np.array(x + 1j*y))
-        u_alphaBeta_ref = new_abs*np.exp(1j*(new_phase + phase - phi))
+        new_abs = np.abs(np.array(x + 1j * y))
+        u_alphaBeta_ref = new_abs * np.exp(1j * (new_phase + phase - phi))
 
     return u_alphaBeta_ref
