@@ -111,3 +111,43 @@ class TestMinimumPhaseError():
                           np.sqrt(3) for i in range(len(u_abs_res))]
 
         assert pytest.approx(u_abs_res, **tol) == u_abs_expected
+
+
+class TestMinimumDistance():
+    @pytest.mark.parametrize(
+        "u_ref",
+        [
+            (1.1*np.exp(1j*np.pi/5)),
+
+            (np.array([1.1*np.exp(1j*np.pi/5), 1.1 *
+             np.exp(-1j*np.pi/2), 1.1*np.exp(1j*3*np.pi/5)]))
+        ],
+        ids=["complex", "ndarray"]
+    )
+    def test_input_size(self, u_ref, tol):
+        u = ovm.minimum_distance(u_ref)
+        u_result = np.abs(u).tolist() if isinstance(
+            u, np.ndarray) else np.abs(u)
+        phase = np.atan2(np.imag(u), np.real(u))
+        ue = np.abs(ovm.voltage_limit(phase)*np.exp(1j*phase))
+        u_expected = ue.tolist() if isinstance(u, np.ndarray) else ue
+
+        assert pytest.approx(u_result, **tol) == u_expected
+        assert isinstance(u, complex) | isinstance(u, np.ndarray)
+
+    def test_linear(self, phi30, tol):
+        u_abs = 0.5
+        u_ref = u_abs*np.exp(1j*phi30)
+        u_abs_res = (np.abs(ovm.minimum_distance(u_ref))).tolist()
+        u_abs_expected = [u_abs for _ in range(len(u_abs_res))]
+
+        assert pytest.approx(u_abs_res, **tol) == u_abs_expected
+
+    def test_sat(self, phi30, tol):
+        u_abs = 1
+        u_ref = u_abs*np.exp(1j*phi30)
+        u_res = ovm.minimum_distance(u_ref)
+        phase = np.atan2(np.imag(u_res), np.real(u_res))
+        u_lim = ovm.voltage_limit(phase, 1).tolist()
+
+        assert pytest.approx(np.abs(u_res).tolist(), **tol) == u_lim
